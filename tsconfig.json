@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "ES2021",
+        "lib": [
+            "ES2021",
+            "DOM"
+        ],
+        "module": "None",
+        "strict": true,
+        "skipLibCheck": true,
+        "noImplicitAny": false,
+        "moduleResolution": "node",
+        "removeComments": true,
+        "sourceMap": false
+    },
+    "include": [
+        "**/*.ts"
+    ]
+}

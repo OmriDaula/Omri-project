@@ -1,0 +1,52 @@
+// storage.ts
+// אחראי רק על עבודה מול LocalStorage (CRUD)
+
+const LOCAL_STORAGE_KEY = 'expenses';
+
+interface Expense {
+    id: string;
+    category: string;
+    description?: string;
+    amount: number;
+    date: string;
+}
+
+function getExpenses(): Expense[] {
+    try {
+        return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '[]') as Expense[];
+    } catch {
+        return [];
+    }
+}
+
+function saveExpenses(data: Expense[]): void {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+}
+
+function addExpense(expense: Expense): void {
+    const data = getExpenses();
+    data.push(expense);
+    saveExpenses(data);
+}
+
+function updateExpense(updated: Expense): boolean {
+    const data = getExpenses();
+    const idx = data.findIndex(e => e.id === updated.id);
+    if (idx === -1) return false;
+
+    data[idx] = updated;
+    saveExpenses(data);
+    return true;
+}
+
+function deleteExpense(id: string): boolean {
+    if (!confirm('בטוח למחוק את ההוצאה?')) return false;
+
+    const data = getExpenses();
+    const idx = data.findIndex(e => e.id === id);
+    if (idx === -1) return false;
+
+    data.splice(idx, 1);
+    saveExpenses(data);
+    return true;
+}

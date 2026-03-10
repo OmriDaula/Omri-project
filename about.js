@@ -1,3 +1,5 @@
+"use strict";
 (function initAbout() {
-  if (typeof renderMainNav === 'function') renderMainNav('about');
+    if (typeof renderMainNav === 'function')
+        renderMainNav('about');
 })();
