@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ניהול הוצאות - בית</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./styles.css">
+
+  <!-- כל הקבצים באותה תיקייה -->
+  <script defer src="./nav.js"></script>
+  <script defer src="./storage.js"></script>
+  <script defer src="./utils.js"></script>
+  <script defer src="./home.js"></script>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+  <header class="bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
+      <h1 class="text-xl font-bold">מערכת לניהול הוצאות</h1>
+      <nav id="mainNav"></nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+    <section class="bg-white rounded-2xl shadow p-5">
+      <div class="flex items-center justify-between gap-3 flex-wrap">
+        <h2 class="text-lg font-semibold">הוספה / עדכון הוצאה</h2>
+        <div class="text-sm text-slate-600">
+          מצב: <span id="modeBadge" class="font-semibold text-indigo-600">הוספה</span>
+        </div>
+      </div>
+
+      <form id="expenseForm" class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="hidden" id="expenseId" />
+
+        <label class="block">
+          <span class="text-sm font-medium">קטגוריה *</span>
+          <select id="category" class="mt-1 w-full rounded-xl border border-slate-200 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-200" required>
+            <option value="" disabled selected>בחר/י קטגוריה</option>
+            <option value="מזון">מזון</option>
+            <option value="דלק">דלק</option>
+            <option value="פנאי">פנאי</option>
+            <option value="רשויות">רשויות</option>
+            <option value="אחר">אחר</option>
+          </select>
+        </label>
+
+        <label class="block">
+          <span class="text-sm font-medium">גובה ההוצאה *</span>
+          <input id="amount" type="number" inputmode="decimal"
+                 class="mt-1 w-full rounded-xl border border-slate-200 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                 placeholder="לדוגמה: 120.50" required />
+          <p class="text-xs text-slate-500 mt-1">חייב להיות חיובי ועד 100,000</p>
+        </label>
+
+        <label class="block md:col-span-2">
+          <span class="text-sm font-medium">תיאור</span>
+          <textarea id="description"
+                    class="mt-1 w-full rounded-xl border border-slate-200 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                    placeholder="אם בחרת 'אחר' חובה למלא פה..."
+                    rows="3"></textarea>
+        </label>
+
+        <label class="block">
+          <span class="text-sm font-medium">תאריך *</span>
+          <input id="date" type="date"
+                 class="mt-1 w-full rounded-xl border border-slate-200 p-2 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                 required />
+          <p class="text-xs text-slate-500 mt-1">לא ניתן לבחור תאריך עתידי</p>
+        </label>
+
+        <div class="flex gap-2 items-end">
+          <button type="submit" class="w-full md:w-auto px-4 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 active:scale-[0.99]">
+            שמירה
+          </button>
+
+          <button type="button" id="resetBtn"
+                  class="w-full md:w-auto px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300">
+            איפוס
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow p-5">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <h2 class="text-lg font-semibold">טבלת הוצאות</h2>
+        <div class="text-sm text-slate-600">
+          סה״כ רשומות: <span id="totalCount" class="font-semibold">0</span>
+        </div>
+      </div>
+
+      <div class="mt-4 overflow-auto">
+        <table class="min-w-full text-sm">
+          <thead class="text-slate-600">
+            <tr class="border-b">
+              <th class="text-right py-2 px-2">תאריך</th>
+              <th class="text-right py-2 px-2">קטגוריה</th>
+              <th class="text-right py-2 px-2">תיאור</th>
+              <th class="text-right py-2 px-2">סכום</th>
+              <th class="text-right py-2 px-2">פעולות</th>
+            </tr>
+          </thead>
+          <tbody id="expensesTbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

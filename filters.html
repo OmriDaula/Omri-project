@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ניהול הוצאות - פילטרים</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./styles.css">
+
+  <script defer src="./nav.js"></script>
+<script defer src="./storage.js"></script>
+<script defer src="./utils.js"></script>
+<script defer src="./filters.js"></script>
+
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+  <header class="bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
+      <h1 class="text-xl font-bold">מערכת לניהול הוצאות</h1>
+      <nav id="mainNav"></nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+    <section class="bg-white rounded-2xl shadow p-5">
+      <h2 class="text-lg font-semibold">פילטרים</h2>
+
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <label class="block">
+          <span class="text-sm font-medium">פילטר לפי שנה</span>
+          <select id="yearSelect" class="mt-1 w-full rounded-xl border border-slate-200 p-2">
+            <option value="">ללא</option>
+          </select>
+        </label>
+
+        <label class="block">
+          <span class="text-sm font-medium">פילטר לפי שנה + חודש</span>
+          <input id="yearMonthInput" type="month" class="mt-1 w-full rounded-xl border border-slate-200 p-2" />
+          <p class="text-xs text-slate-500 mt-1">בחירה כאן גוברת על "שנה"</p>
+        </label>
+
+        <label class="block">
+          <span class="text-sm font-medium">פילטר לפי תאריך מלא</span>
+          <input id="dateInput" type="date" class="mt-1 w-full rounded-xl border border-slate-200 p-2" />
+          <p class="text-xs text-slate-500 mt-1">בחירה כאן גוברת על כולם</p>
+        </label>
+
+        <label class="block">
+          <span class="text-sm font-medium">פילטר לפי סכום מקסימלי</span>
+          <input id="maxAmountInput" type="number" class="mt-1 w-full rounded-xl border border-slate-200 p-2" placeholder="לדוגמה: 300" />
+        </label>
+      </div>
+
+      <div class="mt-4 flex gap-2">
+        <button id="clearFiltersBtn" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300">
+          ניקוי פילטרים
+        </button>
+      </div>
+    </section>
+
+    <section class="bg-white rounded-2xl shadow p-5">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <h2 class="text-lg font-semibold">תוצאות לפי פילטרים</h2>
+        <div class="text-sm text-slate-600">
+          נמצאו: <span id="filteredCount" class="font-semibold">0</span>
+        </div>
+      </div>
+
+      <div class="mt-4 overflow-auto">
+        <table class="min-w-full text-sm">
+          <thead class="text-slate-600">
+            <tr class="border-b">
+              <th class="text-right py-2 px-2">תאריך</th>
+              <th class="text-right py-2 px-2">קטגוריה</th>
+              <th class="text-right py-2 px-2">תיאור</th>
+              <th class="text-right py-2 px-2">סכום</th>
+            </tr>
+          </thead>
+          <tbody id="filteredTbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

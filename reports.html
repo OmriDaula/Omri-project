@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ניהול הוצאות - דוחות וגרפים</title>
+  
+  <link rel="stylesheet" href="./styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<script defer src="./nav.js"></script>
+<script defer src="./storage.js"></script>
+<script defer src="./utils.js"></script>
+<script defer src="./export.js"></script>
+<script defer src="./reports.js"></script>
+
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-slate-50 text-slate-800">
+  <!-- קצת "הילה" ברקע -->
+  <div class="pointer-events-none fixed inset-0 overflow-hidden">
+    <div class="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-indigo-300/30 blur-3xl"></div>
+    <div class="absolute top-1/2 -left-24 h-72 w-72 rounded-full bg-fuchsia-300/20 blur-3xl"></div>
+    <div class="absolute -bottom-24 right-1/3 h-72 w-72 rounded-full bg-cyan-300/20 blur-3xl"></div>
+  </div>
+
+  <style>
+    /* glass card */
+    .glass {
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.55);
+    }
+    /* nicer focus ring */
+    .focus-nice:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(99,102,241,0.18);
+      border-color: rgba(99,102,241,0.55);
+    }
+  </style>
+
+  <header class="sticky top-0 z-30 border-b border-white/40 bg-white/60 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-400 shadow-lg shadow-indigo-200/50"></div>
+        <div>
+          <h1 class="text-xl font-extrabold tracking-tight">מערכת לניהול הוצאות</h1>
+          <p class="text-xs text-slate-500 -mt-0.5">דוחות • גרפים • יצוא</p>
+        </div>
+      </div>
+      <nav id="mainNav"></nav>
+    </div>
+  </header>
+
+  <main class="relative max-w-6xl mx-auto px-4 py-8 space-y-6">
+
+    <!-- כותרת עליונה -->
+    <section class="glass rounded-3xl shadow-xl shadow-indigo-100/40 p-6">
+      <div class="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h2 class="text-lg font-bold">דוחות וגרפים</h2>
+          <p class="text-sm text-slate-600 mt-1">
+            תצוגה לפי קטגוריה וזמן + יצוא CSV / PDF
+          </p>
+        </div>
+
+        <div class="flex gap-2">
+          <button id="csvBtn"
+                  class="px-4 py-2 rounded-2xl bg-emerald-600 text-white font-semibold
+                         hover:bg-emerald-700 active:scale-[0.99] shadow-lg shadow-emerald-200/40">
+            CSV
+          </button>
+          <button id="pdfBtn"
+                  class="px-4 py-2 rounded-2xl bg-rose-600 text-white font-semibold
+                         hover:bg-rose-700 active:scale-[0.99] shadow-lg shadow-rose-200/40">
+            PDF
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- סטטיסטיקות -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="rounded-3xl shadow-xl shadow-indigo-200/50 p-6 text-white
+                  bg-gradient-to-br from-indigo-600 to-indigo-400">
+        <div class="text-sm opacity-90">סה״כ הוצאות</div>
+        <div id="statTotal" class="text-4xl font-extrabold mt-2">₪0</div>
+        <div id="statCount" class="text-xs opacity-90 mt-3">0 רשומות</div>
+      </div>
+
+      <div class="glass rounded-3xl shadow-xl shadow-slate-200/40 p-6">
+        <div class="text-sm text-slate-500">ממוצע להוצאה</div>
+        <div id="statAvg" class="text-4xl font-extrabold mt-2 text-slate-900">₪0</div>
+        <div class="text-xs text-slate-500 mt-3">מחושב על כל הרשומות</div>
+      </div>
+
+      <div class="glass rounded-3xl shadow-xl shadow-slate-200/40 p-6">
+        <div class="text-sm text-slate-500">קטגוריה מובילה</div>
+        <div id="statTopCat" class="text-2xl font-extrabold mt-3 text-slate-900">—</div>
+        <div id="statTopCatSum" class="text-xs text-slate-500 mt-3">₪0</div>
+      </div>
+    </section>
+
+    <!-- גרפים -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <!-- Pie -->
+      <div class="glass rounded-3xl shadow-xl shadow-slate-200/40 p-6">
+        <div class="flex items-center justify-between gap-3">
+          <h3 class="text-base font-bold">חלוקה לפי קטגוריה</h3>
+          <span class="text-xs text-slate-500">Pie / Doughnut</span>
+        </div>
+        <div class="mt-4">
+          <canvas id="pieChart" height="140"></canvas>
+          <p id="pieEmpty" class="mt-3 text-sm text-slate-500 hidden">אין נתונים להצגת גרף.</p>
+        </div>
+      </div>
+
+      <!-- Bar -->
+      <div class="glass rounded-3xl shadow-xl shadow-slate-200/40 p-6">
+        <div class="flex items-center justify-between gap-3 flex-wrap">
+          <h3 class="text-base font-bold">הוצאות לפי זמן</h3>
+
+          <!-- select מעוצב -->
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-500">קיבוץ לפי</span>
+            <select id="groupBy"
+                    class="focus-nice rounded-2xl border border-slate-200 bg-white/70 px-3 py-2 text-sm">
+              <option value="month">חודשים</option>
+              <option value="year">שנים</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <canvas id="barChart" height="140"></canvas>
+          <p id="barEmpty" class="mt-3 text-sm text-slate-500 hidden">אין נתונים להצגת גרף.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- תחתית קטנה -->
+    <footer class="text-center text-xs text-slate-500 py-6">
+      נבנה עם Tailwind + Chart.js • שמירה ב-LocalStorage
+    </footer>
+  </main>
+</body>
+
+</html>

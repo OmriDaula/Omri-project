@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ניהול הוצאות - אודות</title>
+  
+  <link rel="stylesheet" href="./styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+<script defer src="./nav.js"></script>
+<script defer src="./about.js"></script>
+
+
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+  <header class="bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
+      <h1 class="text-xl font-bold">מערכת לניהול הוצאות</h1>
+      <nav id="mainNav"></nav>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <section class="bg-white rounded-2xl shadow p-6 space-y-4">
+      <h2 class="text-lg font-semibold">אודות המערכת</h2>
+      <p class="text-slate-700">
+        מערכת לניהול הוצאות: הוספה/עדכון/מחיקה, פילטרים לפי זמן/סכום, גרפים, וייצוא PDF/CSV.
+        הנתונים נשמרים ב-LocalStorage.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+        <div>
+          <h3 class="font-semibold">פרטי תלמיד/ה</h3>
+          <ul class="list-disc pr-6 text-slate-700 mt-2">
+            <li>שם: עומרי אבודולה - Omri Abu Daula</li>
+            <li>כיתה/קורס: כיתה 307, קורס Full Stack GenAI Devloper</li>
+            <li>תיאור קצר: קורס פיתוח מקיף לכל מה שצריך לדעת על פיתוח אפליקציה בוויב, התמחות פייתון ו-AI</li>
+          </ul>
+        </div>
+
+        <div class="flex justify-center">
+          <img src="Omri.jpg" alt="תמונת תלמיד/ה" class="rounded-lg shadow" style ="width: 200px; height: 300px" />
+        </div>
